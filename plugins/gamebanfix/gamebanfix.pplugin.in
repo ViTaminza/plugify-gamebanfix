@@ -1,0 +1,23 @@
+{
+	"$schema": "https://raw.githubusercontent.com/untrustedmodders/plugify/refs/heads/main/schemas/plugin.schema.json",
+	"version": "${GAMEBANFIX_VERSION}",
+	"name": "gamebanfix",
+	"description": "Plugify port of the Metamod:Source plugin 'GameBanFix' (the plugin that shipped as addons/gamebanfix). Hooks the engine's per-frame GC-ban kick pass (GameSystem_Think_CheckSteamBan, found by signature) and, while sv_kick_players_with_cooldown <= 1, removes the competitive-cooldown entries (reasons 20/22/23) from CCSGameRules::sm_mapGcBanInformation before the pass runs; a post hook clears the map so a stale entry cannot reach the next player to join. This is the fix for the bug where one game-banned player joining made the whole server unjoinable. No methods, no commands, no config files.",
+	"author": "Pisex / ABKAM, ported to Plugify",
+	"website": "https://github.com/untrustedmodders/plugify",
+	"license": "GPL-3.0",
+	"entry": "bin/gamebanfix",
+	"platforms": [],
+	"language": "cpp",
+	"dependencies": [
+		{
+			"name": "s2sdk",
+			"constraints": ">=2.18.2"
+		},
+		{
+			"name": "polyhook",
+			"constraints": ">=2.5.6"
+		}
+	],
+	"methods": []
+}
