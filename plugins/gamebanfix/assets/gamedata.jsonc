@@ -1,0 +1,50 @@
+{
+  // gamebanfix gamedata - s2sdk gamedata format (same schema as the s2sdk plugin's own
+  // gamedata.jsonc and as plugins/hudmenu/assets/gamedata.jsonc), loaded via s2sdk
+  // LoadGameConfigFile / GetGameConfigSignature / GetGameConfigAddress.
+  //
+  // Byte-for-byte the signatures of the original Metamod plugin's gamebanfix.games.txt,
+  // translated from the "\xNN" spelling into the s2sdk "NN" one ("2A" -> "?").
+  //
+  // Verified against the current server library:
+  //   linuxsteamrt64 libserver.so, .text at file 0x9fedc0 / VA 0x9ffdc0:
+  //     GameSystem_Think_CheckSteamBan        1 match at VA 0x13dad60
+  //     CCSGameRules__sm_mapGcBanInformation  1 match at VA 0x154c5c0 -> map at 0x294c520
+  //   (see BEHAVIOR.md §Verified signatures).
+  "$schema": "https://raw.githubusercontent.com/untrustedmodders/plugify-plugin-s2sdk/refs/heads/main/schemas/gamedata.schema.json",
+  "csgo": {
+    "Signatures": {
+      // The engine's per-frame GC-ban / competitive-cooldown kick pass.
+      // Windows (from the original): push r12; sub rsp, imm; mov rax, [rip+..]; mov r12d, [rax+60h]
+      "GameSystem_Think_CheckSteamBan": {
+        "library": "server",
+        "win64": "41 54 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 44 8B 60",
+        "linuxsteamrt64": "55 48 89 E5 41 57 41 56 41 55 41 54 53 48 83 EC ? 48 8B 05 ? ? ? ? 44 8B 68 ? 45 85 ED 0F 8E ? ? ? ? 8B 15"
+      },
+      // lea reg, [rip + sm_mapGcBanInformation] - the rip-relative operand of the map access.
+      // Windows: lea rcx with the "Notification about user penalty" function around it.
+      "CCSGameRules__sm_mapGcBanInformation": {
+        "library": "server",
+        "win64": "48 8D 0D ? ? ? ? 0F 11 44 24 ? 0F 11 44 24 ? E8",
+        "linuxsteamrt64": "48 8D 35 ? ? ? ? 89 C2 48 63 46"
+      }
+    },
+    "Addresses": {
+      // The map pointer itself: the lea's disp32 sits at +3 of the match, and the instruction
+      // ends at +7 - exactly what the original computes by hand (sig + 7 + *(int32*)(sig + 3)).
+      "CCSGameRules__sm_mapGcBanInformation": {
+        "signature": "CCSGameRules__sm_mapGcBanInformation",
+        "win64": [
+          {
+            "read_offs32": 3
+          }
+        ],
+        "linuxsteamrt64": [
+          {
+            "read_offs32": 3
+          }
+        ]
+      }
+    }
+  }
+}
