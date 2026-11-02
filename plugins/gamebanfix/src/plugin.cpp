@@ -373,6 +373,12 @@ public:
 						}
 					} catch (...) {
 					}
+				} else if (hook != nullptr) {
+					// Without AreCallbacksRegistered the shared detour cannot be checked; leaving it
+					// installed is harmless (the trampoline belongs to the polyhook plugin), but the
+					// unload is not clean - say so instead of claiming it was unhooked.
+					Log("gamebanfix: polyhook unregister bindings are missing - the shared detour stays installed",
+						plg::Severity::Warning);
 				}
 				g_hookedFunction = nullptr;
 			}

@@ -4,11 +4,13 @@ Plugify port of the Metamod:Source plugin 'GameBanFix' (the plugin that shipped 
 
 Plugify port (fork) of **GameBanFix** by Cruze (aiolos1045, Vauff) (Metamod (C++)).
 Original: https://github.com/Cruze03/GameBanFix
-The code was rewritten for Plugify / s2sdk; behaviour follows the original.
+The code was rewritten for Plugify / s2sdk.
 
 ## Requirements
 - [Plugify](https://github.com/untrustedmodders/plugify) with [s2sdk](https://github.com/untrustedmodders/plugify-plugin-s2sdk)
-- Plugify dependencies: s2sdk, polyhook
+- Plugin version: 1.0.2
+- Plugify dependencies: s2sdk (>=2.18.2), polyhook (>=2.5.6)
+- Self-contained s2sdk integration: uses s2sdk directly, without the pisexcompat library.
 
 ## Installation
 Download `gamebanfix-1.0.2.zip` from Releases and extract it into `game/csgo/`.
